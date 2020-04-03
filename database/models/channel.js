@@ -18,6 +18,17 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
     })
+
+    Channel.belongsToMany(models.User,{
+      through :'channel_member',
+      foreignKey:{
+        name:'channelId',
+        filed:'channel_id'
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
+    })
+
   };
   return Channel;
 };
