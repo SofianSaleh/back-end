@@ -19,13 +19,17 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     timestamps:true,
-    paranoid: true
+    paranoid: true,
+    underscored:true
   });
   User.associate = function(models) {
     // associations can be defined here
     User.belongsToMany(models.Team,{
       through :'member',
-      foreignKey:'user_id',
+      foreignKey:{
+        name:'userId',
+        filed:'user_id'
+      },
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
     })

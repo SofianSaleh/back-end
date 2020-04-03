@@ -5,12 +5,16 @@ module.exports = (sequelize, DataTypes) => {
     public: DataTypes.BOOLEAN
   }, {
     timestamps:true,
-    paranoid: true
+    paranoid: true,
+    underscored:true
   });
   Channel.associate = function(models) {
     // associations can be defined here
     Channel.belongsTo(models.Team,{
-      foreignKey:'team_id',
+      foreignKey:{
+        name:'teamId',
+        filed:'team_id'
+      },
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
     })
