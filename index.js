@@ -15,19 +15,20 @@ app.use(express.json())
 
 // Here instead of importing schemas and resolvers manually we use this library called merge-graphql-schemas to help with the procedure
 
-const types = fileLoader(path.join(__dirname, './schema'));
-const resolvers = fileLoader(path.join(__dirname, './resolvers'));
-
-const typeDefs =  mergeTypes(types);
-const resolvers = mergeResolvers(resolvers)
+const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schema')));
+const resolvers = mergeResolvers(fileLoader(path.join(__dirname, './resolvers')));
 
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    playground:{
-        endpoint: endPoint,
-        settings:{"editor.theme":"dark"
+    context:{
+      models,
+        user:{
+          id:1
         }
+    },
+    playground:{
+        endpoint: endPoint
     }
 });
 // add any middleware by typing it after the path (path, jwtAuth)
