@@ -6,11 +6,14 @@ const models = require('./database/models')
 const path = require('path');
 const { fileLoader, mergeTypes, mergeResolvers } = require('merge-graphql-schemas');
 
+const cors =  require('cors')
+
 const PORT = 8080;
 
 const app = express();
 const endPoint = `/graphql`
 
+app.use(cors())
 app.use(express.json())
 
 // Here instead of importing schemas and resolvers manually we use this library called merge-graphql-schemas to help with the procedure
