@@ -14,25 +14,11 @@ module.exports = {
   Mutation: {
     login: (parent, { email, password }, { models, SECRET, SECRET2 }) =>
       tryLogin(email, password, models, SECRET, SECRET2),
-    register: async (parent, { password, ...otherArgs }, { models }) => {
-      try {
-        if (password.length < 6) {
-          return {
-            success: false,
-            errors: [
-              {
-                path: "password",
-                message: `Password must be longer thean 6 characters`,
-              },
-            ],
-          };
-        }
 
-        const hashedPassword = await bcrypt.hash(password, 12);
-        const user = await models.User.create({
-          ...otherArgs,
-          password: hashedPassword,
-        });
+    register: async (parent, args, { models }) => {
+      try {
+        const user = await models.User.create(args);
+        console.log(user);
         return {
           success: true,
           user,

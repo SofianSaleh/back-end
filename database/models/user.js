@@ -1,3 +1,5 @@
+const bcrypt = require("bcryptjs");
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "User",
@@ -9,13 +11,13 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           isAlphanumeric: {
             args: true,
-            message: `The username must contain only letters or number`
+            msg: `The username must contain only letters or number`,
           },
           len: {
             args: [4, 25],
-            message: `The username must be between 4 and 25 characters`
-          }
-        }
+            msg: `The username must be between 4 and 25 characters`,
+          },
+        },
       },
 
       email: {
@@ -24,43 +26,57 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         validate: {
           isEmail: {
-            args: false,
-            message: `Invalid Email`
-          }
-        }
+            args: true,
+            msg: `Invalid Email`,
+          },
+        },
       },
 
       password: {
         type: DataTypes.STRING,
-        allowNull: false
-      }
+        allowNull: false,
+        validate: {
+          len: {
+            args: [6, 100],
+            msg: `The password must be between 6 and 100 characters`,
+          },
+        },
+      },
+    },
+    {
+      hooks: {
+        afterValidate: async (user) => {
+          const hashedPassword = await bcrypt.hash(user.password, 12);
+          user.password = hashedPassword;
+        },
+      },
     },
     {
       timestamps: true,
       paranoid: true,
-      underscored: true
+      underscored: true,
     }
   );
-  User.associate = function(models) {
+  User.associate = function (models) {
     // associations can be defined here
     User.belongsToMany(models.Team, {
       through: "member",
       foreignKey: {
         name: "userId",
-        filed: "user_id"
+        filed: "user_id",
       },
       onDelete: "CASCADE",
-      onUpdate: "CASCADE"
+      onUpdate: "CASCADE",
     });
 
     User.belongsToMany(models.Channel, {
       through: "channel_member",
       foreignKey: {
         name: "userId",
-        filed: "user_id"
+        filed: "user_id",
       },
       onDelete: "CASCADE",
-      onUpdate: "CASCADE"
+      onUpdate: "CASCADE",
     });
   };
   return User;
