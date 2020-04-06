@@ -10,13 +10,22 @@ module.exports = `
         getAllUsers: [User!]!
     }
     type registerResponse {
-        success: Boolean!,
+        success: Boolean!
         user: User
-        errors: [Error!],
+        errors: [Error!]
     }
     
+    type loginResponse {
+        success: Boolean!
+        token: String
+        refreshToken: String
+        errors: [Error!]
+    }
+
     type Mutation {
         register(username:String!, email: String!, password: String!) : registerResponse!
+        login(email: String!, password: String!) : loginResponse!
+
     }
      
 `;

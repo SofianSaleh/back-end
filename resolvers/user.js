@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const { formatErrors } = require("../helper");
+const { tryLogin } = require("../auth");
 
 module.exports = {
   Query: {
@@ -8,9 +9,11 @@ module.exports = {
     },
     getAllUsers: async (parent, args, { models }) => {
       return await models.User.findAll();
-    }
+    },
   },
   Mutation: {
+    login: (parent, { email, password }, { models, SECRET, SECRET2 }) =>
+      tryLogin(email, password, models, SECRET, SECRET2),
     register: async (parent, { password, ...otherArgs }, { models }) => {
       try {
         if (password.length < 6) {
@@ -19,32 +22,27 @@ module.exports = {
             errors: [
               {
                 path: "password",
-                message: `Password must be longer thean 6 characters`
-              }
-            ]
+                message: `Password must be longer thean 6 characters`,
+              },
+            ],
           };
         }
 
         const hashedPassword = await bcrypt.hash(password, 12);
         const user = await models.User.create({
           ...otherArgs,
-          password: hashedPassword
+          password: hashedPassword,
         });
         return {
           success: true,
-          user
+          user,
         };
       } catch (e) {
-        console.log(`hi`);
-        console.log({
-          success: false,
-          errors: formatErrors(e, models)
-        });
         return {
           success: false,
-          errors: formatErrors(e, models)
+          errors: formatErrors(e, models),
         };
       }
-    }
-  }
+    },
+  },
 };
