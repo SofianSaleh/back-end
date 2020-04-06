@@ -1,12 +1,17 @@
 module.exports = `
- type Team {
+    type Team {
         id: Int!
         name: String!
         members: [User!]!
         channels: Channel!
     }
+
+    type createTeamResponse {
+        success: Boolean!
+        errors: [Error!]
+    }
     
     type Mutation {
-        createTeam(name: String!) : Boolean!
+        createTeam(name: String!) : createTeamResponse!
     }
-`
+`;

@@ -1,4 +1,3 @@
-const bcrypt = require("bcryptjs");
 const { formatErrors } = require("../helper");
 const { tryLogin } = require("../auth");
 
@@ -12,8 +11,9 @@ module.exports = {
     },
   },
   Mutation: {
-    login: (parent, { email, password }, { models, SECRET, SECRET2 }) =>
-      tryLogin(email, password, models, SECRET, SECRET2),
+    login: async (parent, { email, password }, { models, SECRET, SECRET2 }) => {
+      return await tryLogin(email, password, models, SECRET, SECRET2);
+    },
 
     register: async (parent, args, { models }) => {
       try {
