@@ -2,13 +2,21 @@ const { formatErrors } = require("../helper");
 const requiresAuth = require("../premissions");
 
 module.exports = {
+  Query: {
+    allTeams: requiresAuth.createResolver(
+      async (parent, args, { models, user }) => {
+        return await models.Team.findAll({
+          where: { owner: user.id },
+          raw: true,
+        });
+      }
+    ),
+  },
   Mutation: {
     createTeam: requiresAuth.createResolver(
       async (parent, args, { models, user }) => {
         try {
-          console.log(user);
           const team = await models.Team.create({ ...args, owner: user.id });
-          console.log(team);
           return {
             success: true,
           };
@@ -21,5 +29,9 @@ module.exports = {
         }
       }
     ),
+  },
+  Team: {
+    channels: ({ id }, args, { models }) =>
+      models.Channel.findAll({ where: { teamId: id } }),
   },
 };

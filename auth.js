@@ -44,9 +44,13 @@ let refreshTokens = async (token, refreshToken, models, SECRET, SECRET2) => {
 };
 
 let createTokens = (user, secret_1, secret_2) => {
-  const createToken = jwt.sign({ user: _.pick(user, "id") }, secret_1, {
-    expiresIn: "15m",
-  });
+  const createToken = jwt.sign(
+    { user: _.pick(user, ["id", "username"]) },
+    secret_1,
+    {
+      expiresIn: "15m",
+    }
+  );
 
   const createRefreshToken = jwt.sign({ user: _.pick(user, "id") }, secret_2, {
     expiresIn: "7d",
