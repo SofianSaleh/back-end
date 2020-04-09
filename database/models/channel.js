@@ -1,34 +1,40 @@
-'use strict';
+"use strict";
 module.exports = (sequelize, DataTypes) => {
-  const Channel = sequelize.define('Channel', {
-    name: DataTypes.STRING,
-    public: DataTypes.BOOLEAN
-  }, {
-    timestamps:true,
-    paranoid: true,
-    underscored:true
-  });
-  Channel.associate = function(models) {
+  const Channel = sequelize.define(
+    "Channel",
+    {
+      name: DataTypes.STRING,
+      public: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
+    },
+    {
+      timestamps: true,
+      paranoid: true,
+      underscored: true,
+    }
+  );
+  Channel.associate = function (models) {
     // associations can be defined here
-    Channel.belongsTo(models.Team,{
-      foreignKey:{
-        name:'teamId',
-        filed:'team_id'
+    Channel.belongsTo(models.Team, {
+      foreignKey: {
+        name: "teamId",
+        filed: "team_id",
       },
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
-    })
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
 
-    Channel.belongsToMany(models.User,{
-      through :'channel_member',
-      foreignKey:{
-        name:'channelId',
-        filed:'channel_id'
+    Channel.belongsToMany(models.User, {
+      through: "channel_member",
+      foreignKey: {
+        name: "channelId",
+        filed: "channel_id",
       },
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
-    })
-
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
   };
   return Channel;
 };

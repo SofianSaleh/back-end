@@ -17,13 +17,16 @@ module.exports = {
       async (parent, args, { models, user }) => {
         try {
           const team = await models.Team.create({ ...args, owner: user.id });
+          await models.Channel.create({ name: "general", teamId: team.id });
           return {
             success: true,
+            team,
           };
         } catch (e) {
           console.log(e);
           return {
             success: false,
+
             error: formatErrors(e, models),
           };
         }

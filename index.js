@@ -31,7 +31,6 @@ const addUser = async (req, res, next) => {
     try {
       const { user } = jwt.verify(token, process.env.SECRET);
       req.user = user;
-      console.log(req.user);
     } catch (err) {
       const refreshToken = req.headers["x-refresh-token"];
       const newTokens = await refreshTokens(
@@ -63,7 +62,6 @@ const server = new ApolloServer({
   resolvers,
   context: async ({ req }) => {
     if (req.headers[`x-token`]) {
-      console.log(req.headers, `-----=-=-=-=-=-=-=-=-`);
       const data = await addUser(req);
     }
     return {

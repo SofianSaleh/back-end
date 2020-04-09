@@ -8,6 +8,7 @@ module.exports = `
 
     type createTeamResponse {
         success: Boolean!
+        team: Team!
         errors: [Error!]
     }
 
