@@ -1,4 +1,4 @@
-module.exports= `
+module.exports = `
     type Channel {
         id: Int!
         name: String!
@@ -7,7 +7,13 @@ module.exports= `
         user: [User!]!
     }
     
-    type Mutation {
-        createChannel(teamId: Int!, name: String!, public: Boolean=false) : Boolean!
+    type ChannelResponse {
+        success: boolean!
+        channel: Channel
+        errors: [Error!]
     }
-`
+
+    type Mutation {
+        createChannel(teamId: Int!, name: String!, public: Boolean=false) : ChannelResponse!
+    }
+`;
